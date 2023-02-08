@@ -1,0 +1,40 @@
+Function Ping(ip)
+
+Dim cmd, status
+'creates variables cmd(opens command prompt for ping input) & status(returns bool value for ping output)
+
+Set cmd = CreateObject("Wscript")
+'Sets cmd to open command prompt for ping input
+
+status = cmd.Run("ping -n l -w 1000" & ip, 0, True)
+'Sets status to output value of cmd ping
+'-n 1 means number of pings is 1. -w 1000 means timeout to wait is 1000ms. ip holds value of ip to ping.
+
+If status = 0 Then
+    Ping = True
+Else
+    Ping = False
+End If
+'Sets Ping function output depending on value of status
+
+End Function
+
+Sub PingMacro()
+
+Dim ip As String
+'creates variable ip as input value
+
+For introw = 2 To ActiveSheet.Cells(65536, 2).End(xlUp).Row
+    ip = ActiveSheet.Cells(introw, 2).Value
+    'Sets ip to ip address to ping from row 2 in table
+    If Ping(ip) = True Then
+        ActiveSheet.Cells(introw, 3).Value = "Online"
+        'Sets Status column in corresponding row to online if status variable is set to true.
+    Else
+        ActiveSheet.Cells(introw, 3).Value = "Offline"
+        'Sets Status column in corresponding row to offline if status variable is set to false.
+    End If
+    
+Next
+
+End Sub
